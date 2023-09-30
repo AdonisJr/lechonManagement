@@ -28,12 +28,11 @@ export const POST = async (req: NextRequest) =>{
         order_type: data.order_type,
         paid_amount: data.paid_amount
     }
-    console.log(order)
     await connectDB();
     try{
         await ordersModel.create(order)
         
-        return NextResponse.json({message: 'Successfully added'}) 
+        return NextResponse.json({message: "Successfully added"}) 
 
     }catch(error){
         console.log(error)
