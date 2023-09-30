@@ -30,8 +30,8 @@ export default function OrderList({ handleModal }: any) {
   });
 
   return (
-    <div className="bg-white rounded-sm p-5">
-      <table className="table table-auto overflow-x-scroll w-full text-xs sm:text-sm">
+    <div className="p-2 bg-white rounded-sm sm:p-5">
+      <table className="table table-auto overflow-scroll w-full text-xs sm:text-sm">
         <thead className="">
           <tr>
             <th className="">Hog no.</th>
@@ -40,9 +40,9 @@ export default function OrderList({ handleModal }: any) {
             <th className="hidden sm:block">Description</th>
             <th>Time</th>
             <th>Date</th>
-            <th>Amount</th>
-            <th>Amount Paid</th>
-            <th>Bal.</th>
+            <th className="hidden sm:block py-2">Amount</th>
+            <th className="hidden sm:block py-2">Paid</th>
+            <th className="hidden sm:block py-2">Bal.</th>
             <th>Type</th>
             <th>action</th>
           </tr>
@@ -60,18 +60,18 @@ export function Orders({ order, getTime, getDate, handleModal, setSelectedOrder 
       className="border-b-2 my-12 h-0.5 border-t-0 bg-neutral-100 opacity-100 dark:opacity-50"
     >
       <td key={order._id} className="">{order.hog_number}</td>
-      <td className="p-2">{order.last_name + ", " + order.first_name}</td>
-      <td className="p-2">{order.no_of_kilos}</td>
+      <td className="py-2">{order.last_name + ", " + order.first_name}</td>
+      <td className="py-2">{order.no_of_kilos}</td>
       <td className="hidden sm:block p-2">{order.description}</td>
-      <td className="p-2">{getTime(order.pick_up_time)}</td>
-      <td className="p-2">{getDate(order.pick_up_time)}</td>
-      <td className="p-2">{order.amount}</td>
-      <td className="p-2">{order.paid_amount}</td>
-      <td className="p-2">
+      <td className="py-2">{getTime(order.pick_up_time)}</td>
+      <td className="py-2">{getDate(order.pick_up_time)}</td>
+      <td className="hidden sm:block py-2">{order.amount}</td>
+      <td className="hidden sm:block py-2">{order.paid_amount}</td>
+      <td className="py-2">
         {order.amount - order.paid_amount}
       </td>
-      <td className="p-2">{order.order_type}</td>
-      <td className="p-2 flex gap-1">
+      <td className="py-2">{order.order_type}</td>
+      <td className="gap-2 sm:p-2 sm:flex">
         <button
           className="flex justify-center items-center"
           onClick={() => {
