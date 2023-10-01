@@ -2,6 +2,19 @@ import { ordersModel } from "@/models/orders";
 import { connectDB } from "@/utils/mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 
+export const GET = async ({ params }: any) =>{
+  const keywords = params.id;
+  try{
+  const orders = await ordersModel.find({first_name: {$regex: keywords}});
+
+      return NextResponse.json(orders) 
+
+  }catch(error){
+      return NextResponse.json(error)
+  }
+
+}
+
 export const PUT = async (req: NextRequest, { params }: any) => {
   const { id } = params;
   const data = await req.json();
@@ -37,6 +50,20 @@ export const PUT = async (req: NextRequest, { params }: any) => {
     );
 
     return NextResponse.json({ message: "Successfully updated" });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(error);
+  }
+};
+
+export const DELETE = async (req: NextRequest, { params }: any) => {
+  const { id } = params;
+
+  await connectDB();
+  try {
+    await ordersModel.deleteOne({_id: id})
+
+    return NextResponse.json({ message: "Successfully deleted" });
   } catch (error) {
     console.log(error);
     return NextResponse.json(error);

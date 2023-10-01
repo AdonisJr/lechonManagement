@@ -6,6 +6,7 @@ interface UserDocument extends Document{
     last_name: string;
     no_of_kilos: number;
     description: string;
+    pick_up_date: String;
     pick_up_time: String;
     amount: number;
     order_type: string;
@@ -20,6 +21,7 @@ export const ordersSchema = new Schema<UserDocument>({
     last_name: { type: String, trim: true},
     no_of_kilos: { type: Number},
     description: { type: String},
+    pick_up_date: { type: String},
     pick_up_time: { type: String},
     amount:{ type: Number, default: 0},
     order_type: {type: String},

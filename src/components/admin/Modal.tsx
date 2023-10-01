@@ -3,7 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useStore } from "@/store";
 
-export default function Modal({ handleModal }: any) {
+export default function Modal({ handleModal}: any) {
   const [error, setError] = useState({
     message: "",
   });
@@ -12,17 +12,18 @@ export default function Modal({ handleModal }: any) {
       state.setOrderList,
       state.orderList,
       state.selectedOrder,
-      state.setSelectedOrder,
+      state.selectedOrder
     ]
   );
   const [orderDetails, setOrderDetails] = useState(
-    selectedOrder
+    selectedOrder._id
       ? {
           hog_number: selectedOrder.hog_number,
           first_name: selectedOrder.first_name,
           last_name: selectedOrder.last_name,
           no_of_kilos: selectedOrder.no_of_kilos,
           description: selectedOrder.description,
+          pick_up_date: selectedOrder.pick_up_date,
           pick_up_time: selectedOrder.pick_up_time,
           amount: selectedOrder.amount,
           order_type: selectedOrder.order_type,
@@ -34,6 +35,7 @@ export default function Modal({ handleModal }: any) {
           last_name: "",
           no_of_kilos: "",
           description: "",
+          pick_up_date: "",
           pick_up_time: "",
           amount: 0,
           order_type: "order",
@@ -74,6 +76,9 @@ export default function Modal({ handleModal }: any) {
   const handleDescription = (e: any) => {
     setOrderDetails({ ...orderDetails, description: e.target.value });
   };
+  const handlePickUpDate = (e: any) => {
+    setOrderDetails({ ...orderDetails, pick_up_date: e.target.value });
+  };
   const handlePickUpTime = (e: any) => {
     setOrderDetails({ ...orderDetails, pick_up_time: e.target.value });
   };
@@ -97,7 +102,9 @@ export default function Modal({ handleModal }: any) {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (error.message) return showErrorToast(error.message);
-    selectedOrder
+    if (orderDetails.pick_up_time == "")
+      return showErrorToast("Error, please select Date and Time");
+    selectedOrder._id
       ? await fetch(`/api/order/${selectedOrder._id}`, {
           method: "put",
           headers: {
@@ -108,7 +115,19 @@ export default function Modal({ handleModal }: any) {
           .then((res) => res.json())
           .then((result: any) => {
             showSuccessToast("Successfully updated");
-            setOrderList(orderList);
+            // setOrderList(orderList);
+            // setSelectedOrder({
+            //   _id: "",
+            //   hog_number: "",
+            //   first_name: "",
+            //   last_name: "",
+            //   no_of_kilos: "",
+            //   description: "",
+            //   pick_up_time: "",
+            //   amount: "",
+            //   paid_amount: "",
+            //   order_type: "",
+            // })
             setTimeout(() => {
               handleModal(false);
             }, 2000);
@@ -122,11 +141,10 @@ export default function Modal({ handleModal }: any) {
         })
           .then((res) => res.json())
           .then((result: any) => {
+            showSuccessToast(result.message);
             setTimeout(() => {
-              showSuccessToast("Successfully added");
+              handleModal(false);
             }, 2000);
-            setOrderList(orderList);
-            handleModal(false);
           });
   };
 
@@ -218,8 +236,8 @@ export default function Modal({ handleModal }: any) {
                 </div>
               </div>
               {/* Number of kilos */}
-              <div className="flex items-center gap-2 w-6/6">
-                <div className="flex flex-col w-3/6">
+              <div className="flex items-center flex-wrap sm:flex-nowrap gap-2 w-6/6">
+                <div className="flex flex-col w-full sm:w-3/6">
                   <label
                     className="block mb-2 text-sm font-medium
                     text-gray-900 dark:text-white px-2"
@@ -236,21 +254,38 @@ export default function Modal({ handleModal }: any) {
                   />
                 </div>
 
-                <div className="flex flex-col w-3/6">
+                <div className="flex flex-col w-full sm:w-3/6">
                   <label
                     className="block mb-2 text-sm font-medium
                     text-gray-900 dark:text-white px-2"
                   >
-                    Pick up time
+                    Pick up Time
                   </label>
                   <input
-                    type="datetime-local"
+                    type="time"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
                                 rounded-sm focus:ring-blue-500 focus:border-blue-500
                                 py-2 px-2"
                     placeholder="Pickup time"
                     onChange={handlePickUpTime}
                     defaultValue={orderDetails.pick_up_time}
+                  />
+                </div>
+                <div className="flex flex-col w-full sm:w-3/6">
+                  <label
+                    className="block mb-2 text-sm font-medium
+                    text-gray-900 dark:text-white px-2"
+                  >
+                    Pick up Date
+                  </label>
+                  <input
+                    type="date"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
+                                rounded-sm focus:ring-blue-500 focus:border-blue-500
+                                py-2 px-2"
+                    placeholder="Pickup time"
+                    onChange={handlePickUpDate}
+                    defaultValue={orderDetails.pick_up_date}
                   />
                 </div>
               </div>
@@ -272,7 +307,7 @@ export default function Modal({ handleModal }: any) {
               <div className="flex items-center gap-2 w-6/6">
                 <div className="flex flex-col w-3/6">
                   <input
-                    type="text"
+                    type="number"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
                                 rounded-sm focus:ring-blue-500 focus:border-blue-500
                                 py-2 px-2"
@@ -310,7 +345,7 @@ export default function Modal({ handleModal }: any) {
                   Paid amount
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
                                 rounded-sm focus:ring-blue-500 focus:border-blue-500
                                 py-2 px-2"

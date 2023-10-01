@@ -16,6 +16,7 @@ interface Store {
     last_name: string;
     no_of_kilos: string;
     description: string;
+    pick_up_date: any;
     pick_up_time: any;
     amount: number;
     order_type: string;
@@ -49,6 +50,7 @@ export const useStore = create<Store & Actions>((set) => ({
     last_name: "",
     no_of_kilos: "",
     description: "",
+    pick_up_date: "",
     pick_up_time: "",
     amount: 0,
     order_type: "",
